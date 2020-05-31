@@ -4,7 +4,8 @@ import './App.css';
 import Posts from './components/Posts';
 import Post from './components/Post';
 import Navbar from './components/Navbar';
-
+import Users from './components/Users';
+import User from './components/User';
 function App() {
   return (
     <div className="app">
@@ -22,6 +23,20 @@ function App() {
             path={`/posts/:postId`}
             component={(props) => (
               <Post {...props} history={props.history} />
+            )}
+            exact
+          />
+           <Route
+            path={`/users/`}
+            component={(props) => (
+              <Users  {...props} history={props.history}  />
+            )}
+            exact
+          />
+          <Route
+            path={`/users/:userId`}
+            component={(props) => (
+              <User {...props} history={props.history} />
             )}
             exact
           />

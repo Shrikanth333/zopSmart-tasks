@@ -1,3 +1,4 @@
+import '../styles/Users.css';
 import React, { Component } from 'react';
 import Box from '@material-ui/core/Box';
 import { makeStyles } from '@material-ui/core/styles';
@@ -7,11 +8,11 @@ import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
-class Posts extends Component {
+class Users extends Component {
   constructor() {
     super();
     this.state = {
-      postsInfo: [],
+      usersInfo: [],
     };
   }
   useStyles = makeStyles({
@@ -32,28 +33,27 @@ class Posts extends Component {
     },
   });
   async componentDidMount() {
-    let posts = await fetch(`https://jsonplaceholder.typicode.com/posts`, {
+    let users = await fetch(`https://jsonplaceholder.typicode.com/users`, {
       method: 'GET',
     });
 
     this.setState({
-      postsInfo: await posts.json(),
+      usersInfo: await users.json(),
     });
   }
-  handleOnClick = (post) => {
-    this.props.history.push(`posts/${post.id}`);
+  handleOnClick = (user) => {
+    this.props.history.push(`users/${user.id}`);
   };
 
   render() {
-    const { postsInfo } = this.state;
+    const { usersInfo } = this.state;
     const classes = this.useStyles;
     return (
-      <Box m={2} p={2}>
-        <Typography variant="h2" component="h2"></Typography>
-        <h2>List of Posts</h2>
-        {postsInfo.map((post) => (
+      <Box p={2} className="users">
+        <h2>List of users</h2>
+        {usersInfo.map((user) => (
           <Card
-            key={post.id}
+            key={user.id}
             border={1}
             className={classes.root}
             m={2}
@@ -62,25 +62,22 @@ class Posts extends Component {
             variant="outlined"
           >
             <CardContent>
-              <Typography className={classes.title} color="textPrimary">
-                UserId: {post.userId}
+              <Typography className={classes.title} color="textSecondary">
+                user_name: {user.username}
               </Typography>
               <Typography variant="h5" component="h2">
-                {post.title}
+                {user.name}
               </Typography>
-              <Typography variant="body2" component="p">
-                {post.body}
-              </Typography>
+              <CardActions style={{ justifyContent: 'center' }}>
+                <Button
+                  variant="contained"
+                  size="small"
+                  onClick={() => this.handleOnClick(user)}
+                >
+                  View More Details
+                </Button>
+              </CardActions>
             </CardContent>
-            <CardActions>
-              <Button
-                variant="contained"
-                size="small"
-                onClick={() => this.handleOnClick(post)}
-              >
-                Read more
-              </Button>
-            </CardActions>
           </Card>
         ))}
       </Box>
@@ -88,4 +85,4 @@ class Posts extends Component {
   }
 }
 
-export default Posts;
+export default Users;
