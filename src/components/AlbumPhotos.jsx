@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import Loading from './Loading';
 import Slider from './Slider';
-import '../styles/Slider.css';
 
 class AlbumPhotos extends Component {
   constructor(props) {

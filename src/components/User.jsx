@@ -1,5 +1,6 @@
 import '../styles/User.css';
 import React, { Component } from 'react';
+import Loading from './Loading';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -59,7 +60,9 @@ class User extends Component {
     const { userInfo } = this.state;
     const classes = this.useStyles;
 
-    return userInfo.address === undefined ? null : (
+    return userInfo.address === undefined ? (
+      <Loading />
+    ) : (
       <Card variant="outlined" className="user">
         <CardContent>
           <Typography

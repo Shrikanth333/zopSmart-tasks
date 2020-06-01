@@ -1,25 +1,36 @@
-import React, { Component } from 'react';
-import Slideshow from './Slideshow';
-// import '../styles/Slider.css';
+import React from 'react';
+import '../styles/Slider.css';
 
-const style = {
-  container: 'screenW screenH dGray col',
-  header: 'flex1 fCenter fSize2',
-  main: 'flex8 white',
-  footer: 'flex1 fCenter',
-};
+import { css, keyframes } from 'styled-components';
 
-class Slider extends Component {
-  render() {
-    const slides = this.props.images.map((image, index) => image.url);
+function Slider({ images }) {
+  const length = 100 / images.length;
+  console.log(images);
+  let totalTansition = images.map((image, index) => {
+    return `${length * index}%  { transform: translateX(-${100 * index}%)}`;
+  });
 
+  let slideShow = keyframes`
+    ${totalTansition}
+    `;
+  const animation = (props) =>
+    css`
+      ${slideShow} ${images.length * 4}s  ease-out 1s infinite forward
+    `;
+  let slider = images.map((image, index) => {
     return (
-      <div className={style.container}>
-        <div className={style.main}>
-          <Slideshow slides={slides} />
-        </div>
+      <div
+        key={index}
+        className="slide"
+        style={{
+          animation: { animation },
+        }}
+      >
+        <img className="img" src={image.url} alt="slide-img"></img>
       </div>
     );
-  }
+  });
+
+  return <div className="slider">{slider}</div>;
 }
 export default Slider;
