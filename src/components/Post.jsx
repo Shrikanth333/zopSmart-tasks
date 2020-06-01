@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import Loading from './Loading';
+import ErrorMessage from './ErrorMessage';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-
+import ApiRequest from './ApiRequest';
 class Post extends Component {
   constructor() {
     super();
@@ -13,6 +14,7 @@ class Post extends Component {
       isLoading: true,
       postsInfo: {},
       postCommentsInfo: [],
+      error: false,
     };
   }
   useStyles = makeStyles({
@@ -32,36 +34,49 @@ class Post extends Component {
     },
   });
 
-  async componentDidMount() {
+  componentDidMount() {
     const { match } = this.props;
-    let posts = await fetch(
-      `https://jsonplaceholder.typicode.com/posts/${match.params.postId}`,
-      {
-        method: 'GET',
-      }
-    );
-    let comments = await fetch(
-      `https://jsonplaceholder.typicode.com/comments`,
-      {
-        method: 'GET',
-      }
-    );
 
-    this.setState({
-      postsInfo: await posts.json(),
-      postCommentsInfo: await comments.json(),
-      isLoading: false,
-    });
+    let url = `https://jsonplaceholder.typicode.com/posts/${match.params.postId}`;
+    ApiRequest(url)
+      .then((post) =>
+        this.setState({
+          postsInfo: post,
+        })
+      )
+      .catch((error) =>
+        this.setState({
+          isLoading: false,
+          error: error,
+        })
+      );
+
+    url = `https://jsonplaceholder.typicode.com/comments`;
+    ApiRequest(url)
+      .then((comments) => {
+        this.setState({
+          postCommentsInfo: comments,
+          isLoading: false,
+        });
+      })
+      .catch((error) =>
+        this.setState({
+          isLoading: false,
+          error: error,
+        })
+      );
   }
   handleOnClick = (post) => {
     this.props.history.push(`posts/${post.id}`);
   };
 
   render() {
-    const { postsInfo, postCommentsInfo, isLoading } = this.state;
+    const { postsInfo, postCommentsInfo, isLoading, error } = this.state;
     const classes = this.useStyles;
     return isLoading ? (
       <Loading />
+    ) : error ? (
+      <ErrorMessage error={error} />
     ) : (
       <Box variant="outlined" p={2}>
         <Typography className={classes.title} color="textPrimary" gutterBottom>
@@ -80,10 +95,8 @@ class Post extends Component {
         {postCommentsInfo.map((comment) =>
           comment.postId === postsInfo.id ? (
             <Card
-              //   className={classes.body}
               bgcolor="background.paper"
               variant="outlined"
-              //   className={classes.root}
               key={comment.id}
             >
               <CardContent>

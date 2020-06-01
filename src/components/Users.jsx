@@ -1,5 +1,7 @@
 import '../styles/Users.css';
 import Loading from './Loading';
+import ErrorMessage from './ErrorMessage';
+import ApiRequest from './ApiRequest';
 import React, { Component } from 'react';
 import Box from '@material-ui/core/Box';
 import { makeStyles } from '@material-ui/core/styles';
@@ -34,26 +36,35 @@ class Users extends Component {
       marginBottom: 12,
     },
   });
-  async componentDidMount() {
-    let users = await fetch(`https://jsonplaceholder.typicode.com/users`, {
-      method: 'GET',
-    });
-
-    this.setState({
-      usersInfo: await users.json(),
-      isLoading: false,
-    });
+  componentDidMount() {
+    const url = `https://jsonplaceholder.typicode.com/users`;
+    ApiRequest(url)
+      .then((users) =>
+        this.setState({
+          usersInfo: users,
+          isLoading: false,
+        })
+      )
+      .catch((error) => {
+        this.setState({
+          isLoading: false,
+          error: error,
+        });
+      });
   }
+
   handleOnClick = (user) => {
     this.props.history.push(`users/${user.id}`);
   };
 
   render() {
-    const { usersInfo, isLoading } = this.state;
+    const { usersInfo, isLoading, error } = this.state;
     const classes = this.useStyles;
 
     return isLoading ? (
       <Loading />
+    ) : error ? (
+      <ErrorMessage error={error} />
     ) : (
       <Box p={2} className="users">
         <h2>List of users</h2>

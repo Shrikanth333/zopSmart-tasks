@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import Loading from './Loading';
+import ErrorMessage from './ErrorMessage';
+import ApiRequest from './ApiRequest';
 import Box from '@material-ui/core/Box';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
@@ -14,6 +16,7 @@ class Posts extends Component {
     this.state = {
       postsInfo: [],
       isLoading: true,
+      error: false,
     };
   }
   useStyles = makeStyles({
@@ -33,25 +36,34 @@ class Posts extends Component {
       marginBottom: 12,
     },
   });
-  async componentDidMount() {
-    let posts = await fetch(`https://jsonplaceholder.typicode.com/posts`, {
-      method: 'GET',
-    });
-
-    this.setState({
-      postsInfo: await posts.json(),
-      isLoading: false,
-    });
+  componentDidMount() {
+    const url = `https://jsonplaceholder.typicode.com/posts`;
+    ApiRequest(url)
+      .then((posts) =>
+        this.setState({
+          postsInfo: posts,
+          isLoading: false,
+        })
+      )
+      .catch((error) => {
+        this.setState({
+          isLoading: false,
+          error: error,
+        });
+      });
   }
   handleOnClick = (post) => {
     this.props.history.push(`posts/${post.id}`);
   };
 
   render() {
-    const { postsInfo, isLoading } = this.state;
+    const { postsInfo, isLoading, error } = this.state;
+
     const classes = this.useStyles;
     return isLoading ? (
       <Loading />
+    ) : error ? (
+      <ErrorMessage error={error} />
     ) : (
       <Box m={2} p={2}>
         <Typography variant="h2" component="h2"></Typography>

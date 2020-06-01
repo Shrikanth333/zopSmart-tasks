@@ -1,7 +1,7 @@
 import React from 'react';
 import '../styles/Slider.css';
 
-import { css, keyframes } from 'styled-components';
+import { keyframes } from 'styled-components';
 
 function Slider({ images }) {
   const length = 100 / images.length;
@@ -13,23 +13,21 @@ function Slider({ images }) {
   let slideShow = keyframes`
     ${totalTansition}
     `;
-  let animation = css`
-    ${slideShow} ${images.length * 4}s ease-out 1s infinite
-  `;
+
   let slider = images.map((image, index) => {
     return (
       <div
         key={index}
         className="slide"
         style={{
-          animation: { animation },
+          animation: `${slideShow} ${images.length * 4}s ease-in 1s infinite`,
         }}
       >
         <img className="img" src={image.url} alt="slide-img"></img>
       </div>
     );
   });
-  console.log(slider);
+
   return <div className="slider">{slider}</div>;
 }
 export default Slider;

@@ -1,6 +1,8 @@
 import '../styles/User.css';
 import React, { Component } from 'react';
 import Loading from './Loading';
+import ApiRequest from './ApiRequest';
+import ErrorMessage from './ErrorMessage';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -36,32 +38,35 @@ class User extends Component {
     },
   });
   async componentDidMount() {
-    try {
-      const { match } = this.props;
-      let userInfo = await fetch(
-        `https://jsonplaceholder.typicode.com/users/${match.params.userId}`,
-        {
-          method: 'GET',
-        }
-      );
+    const { match } = this.props;
 
-      this.setState({
-        userInfo: await userInfo.json(),
+    const url = `https://jsonplaceholder.typicode.com/users/${match.params.userId}`;
+    ApiRequest(url)
+      .then((user) =>
+        this.setState({
+          usersInfo: user,
+          isLoading: false,
+        })
+      )
+      .catch((error) => {
+        this.setState({
+          isLoading: false,
+          error: error,
+        });
       });
-    } catch (e) {
-      console.log(e);
-    }
   }
   handleOnClick = (post) => {
     this.props.history.push(`posts/${post.id}`);
   };
 
   render() {
-    const { userInfo } = this.state;
+    const { userInfo, error } = this.state;
     const classes = this.useStyles;
 
     return userInfo.address === undefined ? (
       <Loading />
+    ) : error ? (
+      <ErrorMessage error={error} />
     ) : (
       <Card variant="outlined" className="user">
         <CardContent>

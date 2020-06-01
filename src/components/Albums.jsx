@@ -1,6 +1,8 @@
 import '../styles/Albums.css';
 import React, { Component } from 'react';
 import Loading from './Loading';
+import ErrorMessage from './ErrorMessage';
+import ApiRequest from './ApiRequest';
 import Box from '@material-ui/core/Box';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
@@ -33,25 +35,33 @@ class Albums extends Component {
       marginBottom: 12,
     },
   });
-  async componentDidMount() {
-    let posts = await fetch(`https://jsonplaceholder.typicode.com/albums`, {
-      method: 'GET',
-    });
-
-    this.setState({
-      albumsInfo: await posts.json(),
-      isLoading: false,
-    });
+  componentDidMount() {
+    const url = `https://jsonplaceholder.typicode.com/albums`;
+    ApiRequest(url)
+      .then((albums) =>
+        this.setState({
+          albumsInfo: albums,
+          isLoading: false,
+        })
+      )
+      .catch((error) => {
+        this.setState({
+          isLoading: false,
+          error: error,
+        });
+      });
   }
   handleOnClick = (album) => {
     this.props.history.push(`albums/${album.id}/photos`);
   };
 
   render() {
-    const { albumsInfo, isLoading } = this.state;
+    const { albumsInfo, isLoading, error } = this.state;
     const classes = this.useStyles;
     return isLoading ? (
       <Loading />
+    ) : error ? (
+      <ErrorMessage error={error} />
     ) : (
       <Box p={2} className="albums">
         <h2>List of albums</h2>

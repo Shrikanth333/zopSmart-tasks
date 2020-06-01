@@ -8,7 +8,7 @@ import Users from './components/Users';
 import User from './components/User';
 import Albums from './components/Albums';
 import AlbumPhotos from './components/AlbumPhotos';
-import Courosel from './components/Courosel';
+
 function App() {
   return (
     <div className="app">
@@ -57,13 +57,7 @@ function App() {
             )}
             exact
           />
-           <Route
-            path={`/courosel`}
-            component={(props) => (
-              <Courosel {...props} history={props.history} />
-            )}
-            exact
-          />
+          
         
         </Switch>
     
