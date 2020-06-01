@@ -5,7 +5,7 @@ import { css, keyframes } from 'styled-components';
 
 function Slider({ images }) {
   const length = 100 / images.length;
-  console.log(images);
+
   let totalTansition = images.map((image, index) => {
     return `${length * index}%  { transform: translateX(-${100 * index}%)}`;
   });
@@ -13,10 +13,9 @@ function Slider({ images }) {
   let slideShow = keyframes`
     ${totalTansition}
     `;
-  const animation = (props) =>
-    css`
-      ${slideShow} ${images.length * 4}s  ease-out 1s infinite forward
-    `;
+  let animation = css`
+    ${slideShow} ${images.length * 4}s ease-out 1s infinite
+  `;
   let slider = images.map((image, index) => {
     return (
       <div
@@ -30,7 +29,7 @@ function Slider({ images }) {
       </div>
     );
   });
-
+  console.log(slider);
   return <div className="slider">{slider}</div>;
 }
 export default Slider;
