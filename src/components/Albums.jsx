@@ -1,3 +1,4 @@
+import '../styles/Albums.css';
 import React, { Component } from 'react';
 import Loading from './Loading';
 import Box from '@material-ui/core/Box';
@@ -7,13 +8,12 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-
-class Posts extends Component {
+class Albums extends Component {
   constructor() {
     super();
     this.state = {
-      postsInfo: [],
       isLoading: true,
+      albumsInfo: [],
     };
   }
   useStyles = makeStyles({
@@ -34,31 +34,30 @@ class Posts extends Component {
     },
   });
   async componentDidMount() {
-    let posts = await fetch(`https://jsonplaceholder.typicode.com/posts`, {
+    let posts = await fetch(`https://jsonplaceholder.typicode.com/albums`, {
       method: 'GET',
     });
 
     this.setState({
-      postsInfo: await posts.json(),
+      albumsInfo: await posts.json(),
       isLoading: false,
     });
   }
-  handleOnClick = (post) => {
-    this.props.history.push(`posts/${post.id}`);
+  handleOnClick = (album) => {
+    this.props.history.push(`albums/${album.id}/photos`);
   };
 
   render() {
-    const { postsInfo, isLoading } = this.state;
+    const { albumsInfo, isLoading } = this.state;
     const classes = this.useStyles;
     return isLoading ? (
       <Loading />
     ) : (
-      <Box m={2} p={2}>
-        <Typography variant="h2" component="h2"></Typography>
-        <h2>List of Posts</h2>
-        {postsInfo.map((post) => (
+      <Box p={2} className="albums">
+        <h2>List of albums</h2>
+        {albumsInfo.map((album) => (
           <Card
-            key={post.id}
+            key={album.id}
             border={1}
             className={classes.root}
             m={2}
@@ -67,25 +66,25 @@ class Posts extends Component {
             variant="outlined"
           >
             <CardContent>
-              <Typography className={classes.title} color="textPrimary">
-                UserId: {post.userId}
+              <Typography className={classes.title} color="textSecondary">
+                album_Id: {album.id}
+              </Typography>
+              <Typography className={classes.title} color="textSecondary">
+                user_Id: {album.userId}
               </Typography>
               <Typography variant="h5" component="h2">
-                {post.title}
+                {album.title}
               </Typography>
-              <Typography variant="body2" component="p">
-                {post.body}
-              </Typography>
+              <CardActions style={{ justifyContent: 'center' }}>
+                <Button
+                  variant="contained"
+                  size="small"
+                  onClick={() => this.handleOnClick(album)}
+                >
+                  View Album Photos
+                </Button>
+              </CardActions>
             </CardContent>
-            <CardActions>
-              <Button
-                variant="contained"
-                size="small"
-                onClick={() => this.handleOnClick(post)}
-              >
-                Read more
-              </Button>
-            </CardActions>
           </Card>
         ))}
       </Box>
@@ -93,4 +92,4 @@ class Posts extends Component {
   }
 }
 
-export default Posts;
+export default Albums;

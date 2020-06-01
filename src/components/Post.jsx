@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Loading from './Loading';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -9,6 +10,7 @@ class Post extends Component {
   constructor() {
     super();
     this.state = {
+      isLoading: true,
       postsInfo: {},
       postCommentsInfo: [],
     };
@@ -27,13 +29,6 @@ class Post extends Component {
     },
     pos: {
       marginBottom: 12,
-    },
-    body: {
-      marginTop: '20px',
-    },
-    comment: {
-      textAlign: 'left',
-      marginLeft: '10px',
     },
   });
 
@@ -55,6 +50,7 @@ class Post extends Component {
     this.setState({
       postsInfo: await posts.json(),
       postCommentsInfo: await comments.json(),
+      isLoading: false,
     });
   }
   handleOnClick = (post) => {
@@ -62,27 +58,32 @@ class Post extends Component {
   };
 
   render() {
-    const { postsInfo, postCommentsInfo } = this.state;
+    const { postsInfo, postCommentsInfo, isLoading } = this.state;
     const classes = this.useStyles;
-    return (
+    return isLoading ? (
+      <Loading />
+    ) : (
       <Box variant="outlined" p={2}>
         <Typography className={classes.title} color="textPrimary" gutterBottom>
           UserId: {postsInfo.userId}
         </Typography>
-        <Typography variant="h5" component="h2">
+        <Typography variant="h5" component="h2" gutterBottom>
           {postsInfo.title}
         </Typography>
-        <Typography variant="body2" component="p" className={classes.body}>
+        <Typography variant="body2" component="p" gutterBottom>
           {postsInfo.body}
         </Typography>
 
-        <p className="title"> Comments:</p>
+        <Typography variant="body2" component="p">
+          Comments:
+        </Typography>
         {postCommentsInfo.map((comment) =>
           comment.postId === postsInfo.id ? (
             <Card
+              //   className={classes.body}
               bgcolor="background.paper"
               variant="outlined"
-              className={classes.root}
+              //   className={classes.root}
               key={comment.id}
             >
               <CardContent>

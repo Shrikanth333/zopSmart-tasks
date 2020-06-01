@@ -10,15 +10,13 @@ class User extends Component {
   constructor() {
     super();
     this.state = {
+      isLoading: 'true',
       userInfo: {},
     };
   }
   useStyles = makeStyles({
     root: {
       minWidth: 275,
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
     },
     bullet: {
       display: 'inline-block',
@@ -37,17 +35,21 @@ class User extends Component {
     },
   });
   async componentDidMount() {
-    const { match } = this.props;
-    let userInfo = await fetch(
-      `https://jsonplaceholder.typicode.com/users/${match.params.userId}`,
-      {
-        method: 'GET',
-      }
-    );
+    try {
+      const { match } = this.props;
+      let userInfo = await fetch(
+        `https://jsonplaceholder.typicode.com/users/${match.params.userId}`,
+        {
+          method: 'GET',
+        }
+      );
 
-    this.setState({
-      userInfo: await userInfo.json(),
-    });
+      this.setState({
+        userInfo: await userInfo.json(),
+      });
+    } catch (e) {
+      console.log(e);
+    }
   }
   handleOnClick = (post) => {
     this.props.history.push(`posts/${post.id}`);
@@ -56,8 +58,9 @@ class User extends Component {
   render() {
     const { userInfo } = this.state;
     const classes = this.useStyles;
-    return userInfo.id === undefined ? null : (
-      <Card className={classes.root} variant="outlined" className="user">
+
+    return userInfo.address === undefined ? null : (
+      <Card variant="outlined" className="user">
         <CardContent>
           <Typography
             className={classes.title}

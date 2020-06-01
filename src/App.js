@@ -6,6 +6,8 @@ import Post from './components/Post';
 import Navbar from './components/Navbar';
 import Users from './components/Users';
 import User from './components/User';
+import Albums from './components/Albums';
+import AlbumPhotos from './components/AlbumPhotos';
 function App() {
   return (
     <div className="app">
@@ -37,6 +39,20 @@ function App() {
             path={`/users/:userId`}
             component={(props) => (
               <User {...props} history={props.history} />
+            )}
+            exact
+          />
+           <Route
+            path={`/albums`}
+            component={(props) => (
+              <Albums  {...props} history={props.history} />
+            )}
+            exact
+          />
+            <Route
+            path={`/albums/:albumId/photos`}
+            component={(props) => (
+              <AlbumPhotos {...props} history={props.history} />
             )}
             exact
           />

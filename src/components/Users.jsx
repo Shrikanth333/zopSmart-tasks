@@ -1,4 +1,5 @@
 import '../styles/Users.css';
+import Loading from './Loading';
 import React, { Component } from 'react';
 import Box from '@material-ui/core/Box';
 import { makeStyles } from '@material-ui/core/styles';
@@ -13,6 +14,7 @@ class Users extends Component {
     super();
     this.state = {
       usersInfo: [],
+      isLoading: true,
     };
   }
   useStyles = makeStyles({
@@ -39,6 +41,7 @@ class Users extends Component {
 
     this.setState({
       usersInfo: await users.json(),
+      isLoading: false,
     });
   }
   handleOnClick = (user) => {
@@ -46,9 +49,12 @@ class Users extends Component {
   };
 
   render() {
-    const { usersInfo } = this.state;
+    const { usersInfo, isLoading } = this.state;
     const classes = this.useStyles;
-    return (
+
+    return isLoading ? (
+      <Loading />
+    ) : (
       <Box p={2} className="users">
         <h2>List of users</h2>
         {usersInfo.map((user) => (
