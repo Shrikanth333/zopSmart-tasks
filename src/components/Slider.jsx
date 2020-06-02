@@ -1,33 +1,81 @@
 import React from 'react';
 import '../styles/Slider.css';
 
-import { keyframes } from 'styled-components';
+class Slider extends React.Component {
+  state = {
+    slider: [],
+    transform: 'translateX(-0%)',
+    index: 0,
+  };
+  componentDidMount() {
+    this.startSlide();
+  }
+  startSlide = () => {
+    setInterval(() => {
+      this.nextSlide();
+    }, 2000);
+  };
 
-function Slider({ images }) {
-  const length = 100 / images.length;
+  nextSlide = () => {
+    if (this.state.index > 50) {
+      this.setState({ index: 0 });
+    }
+    this.setState({ index: this.state.index + 1 });
+    this.setState({ transform: `translateX(-${100 * this.state.index}%)` });
+    let slider = this.props.images.map((image, index) => {
+      return (
+        <div
+          key={index}
+          className="slide"
+          style={{
+            transition: '.7s ease-out',
+            transform: this.state.transform,
+          }}
+        >
+          <img className="img" src={image.url} alt="slide-img"></img>
+        </div>
+      );
+    });
+    this.setState({ slider: slider });
+  };
+  prevSlide = (slider1) => {
+    if (this.state.index < 0) {
+      return;
+    }
+    this.setState({ index: this.state.index - 1 });
+    this.setState({ transform: `translateX(${-100 * this.state.index}%)` });
+    let slider = this.props.images.map((image, index) => {
+      return (
+        <div
+          key={index}
+          className="slide"
+          style={{
+            transition: '.7s ease-out',
+            transform: this.state.transform,
+          }}
+        >
+          <img className="img" src={image.url} alt="slide-img"></img>
+        </div>
+      );
+    });
+    this.setState({ slider: slider });
+  };
+  render() {
+    const { slider } = this.state;
 
-  let totalTansition = images.map((image, index) => {
-    return `${length * index}%  { transform: translateX(-${100 * index}%)}`;
-  });
-
-  let slideShow = keyframes`
-    ${totalTansition}
-    `;
-
-  let slider = images.map((image, index) => {
     return (
-      <div
-        key={index}
-        className="slide"
-        style={{
-          animation: `${slideShow} ${images.length * 4}s ease-in 1s infinite`,
-        }}
-      >
-        <img className="img" src={image.url} alt="slide-img"></img>
+      <div>
+        <button className="btn" onClick={() => this.prevSlide(slider)}>
+          prev
+        </button>
+
+        <button className="btn" onClick={() => this.nextSlide(slider)}>
+          next
+        </button>
+
+        <div className="slider">{slider}</div>
       </div>
     );
-  });
-
-  return <div className="slider">{slider}</div>;
+  }
 }
 export default Slider;
