@@ -8,6 +8,7 @@ import Users from './components/Users';
 import User from './components/User';
 import Albums from './components/Albums';
 import AlbumPhotos from './components/AlbumPhotos';
+import SimpleTable from './components/Table'
 
 function App() {
   return (
@@ -57,7 +58,13 @@ function App() {
             )}
             exact
           />
-          
+          <Route
+            path={`/tables`}
+            component={(props) => (
+              <SimpleTable {...props} history={props.history} />
+            )}
+            exact
+          />
         
         </Switch>
     

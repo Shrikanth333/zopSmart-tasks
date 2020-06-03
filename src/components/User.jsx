@@ -66,7 +66,7 @@ class User extends Component {
     return userInfo.address === undefined ? (
       <Loading />
     ) : error ? (
-      <ErrorMessage error={error} />
+      <ErrorMessage error={error.message} />
     ) : (
       <Card variant="outlined" className="user">
         <CardContent>

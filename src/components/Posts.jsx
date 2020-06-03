@@ -46,6 +46,7 @@ class Posts extends Component {
         })
       )
       .catch((error) => {
+        console.log(error);
         this.setState({
           isLoading: false,
           error: error,
@@ -58,12 +59,12 @@ class Posts extends Component {
 
   render() {
     const { postsInfo, isLoading, error } = this.state;
-
+    console.log(error.message);
     const classes = this.useStyles;
     return isLoading ? (
       <Loading />
     ) : error ? (
-      <ErrorMessage error={error} />
+      <ErrorMessage error={error.message} />
     ) : (
       <Box m={2} p={2}>
         <Typography variant="h2" component="h2"></Typography>

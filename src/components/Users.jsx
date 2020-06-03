@@ -64,7 +64,7 @@ class Users extends Component {
     return isLoading ? (
       <Loading />
     ) : error ? (
-      <ErrorMessage error={error} />
+      <ErrorMessage error={error.message} />
     ) : (
       <Box p={2} className="users">
         <h2>List of users</h2>

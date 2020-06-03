@@ -61,7 +61,7 @@ class Albums extends Component {
     return isLoading ? (
       <Loading />
     ) : error ? (
-      <ErrorMessage error={error} />
+      <ErrorMessage error={error.message} />
     ) : (
       <Box p={2} className="albums">
         <h2>List of albums</h2>

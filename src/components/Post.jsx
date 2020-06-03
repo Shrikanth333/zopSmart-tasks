@@ -76,7 +76,7 @@ class Post extends Component {
     return isLoading ? (
       <Loading />
     ) : error ? (
-      <ErrorMessage error={error} />
+      <ErrorMessage error={error.message} />
     ) : (
       <Box variant="outlined" p={2}>
         <Typography className={classes.title} color="textPrimary" gutterBottom>

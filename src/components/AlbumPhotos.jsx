@@ -38,7 +38,7 @@ class AlbumPhotos extends Component {
     return isLoading ? (
       <Loading />
     ) : error ? (
-      <ErrorMessage error={error} />
+      <ErrorMessage error={error.message} />
     ) : (
       <React.Fragment>
         <Slider images={filteredAlbumPost} />

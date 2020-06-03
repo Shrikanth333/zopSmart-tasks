@@ -8,7 +8,7 @@ function ErrorMessage(props) {
         justifyContent: 'center',
       }}
     >
-      <div> {props.error}</div>
+      <div> {props.error} net problem</div>
     </div>
   );
 }
