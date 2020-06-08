@@ -3,10 +3,7 @@ import {
     UPDATE_ROWS} from "../actions/types";;
 
     const initialState = {
-        rows: [[0,0,0,0,0],
-        [0,0,0,0,0],
-        [0,0,0,0,0],
-        [0,0,0,0,0]],
+        rows: []
         
       };
 

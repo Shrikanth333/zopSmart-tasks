@@ -61,7 +61,7 @@ function App() {
           <Route
             path={`/tables`}
             component={(props) => (
-              <SimpleTable {...props} history={props.history} />
+              <SimpleTable numberOfRows={4}  numberOfColumns={4} history={props.history} />
             )}
             exact
           />

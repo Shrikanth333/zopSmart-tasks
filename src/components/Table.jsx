@@ -4,17 +4,26 @@ import Input from '@material-ui/core/Input';
 import { connect } from 'react-redux';
 import { fetchAllRows, updateRows } from '../actions/tableActions';
 
-class SimpleTables extends React.Component {
+export class SimpleTables extends React.Component {
+  componentDidMount() {
+    const { numberOfRows, numberOfColumns } = this.props;
+
+    let table = [];
+    for (let i = 0; i < numberOfRows; i++) {
+      table.push(Array(numberOfColumns + 2).fill(0));
+    }
+    this.props.fetchAllRows(table);
+  }
   handleChange = (e, id, rowIndex, currentRow) => {
     currentRow[id] = Number(e.target.value);
-    currentRow[3] = this.sum(currentRow);
-    currentRow[4] = this.multiply(currentRow);
+    currentRow[currentRow.length - 2] = this.sum(currentRow);
+    currentRow[currentRow.length - 1] = this.multiply(currentRow);
 
     this.props.updateRows(currentRow, rowIndex);
   };
   sum = (row1) => {
     const sum = row1.reduce((sum, item, index) => {
-      if (index < 3) {
+      if (row1.length - index > 2) {
         sum = item + sum;
       }
       return sum;
@@ -24,7 +33,7 @@ class SimpleTables extends React.Component {
   };
   multiply = (row1) => {
     const sum = row1.reduce((sum, item, index) => {
-      if (index < 3) {
+      if (row1.length - index > 2) {
         sum = item * sum;
       }
       return sum;
@@ -39,44 +48,42 @@ class SimpleTables extends React.Component {
       return (
         <tr key={index}>
           <td>{index + 1}</td>
-          <td>
-            {' '}
-            <Input
-              defaultValue={0}
-              onChange={(e) => this.handleChange(e, 0, index, row)}
-            />
-          </td>
-          <td>
-            {' '}
-            <Input
-              defaultValue={0}
-              onChange={(e) => this.handleChange(e, 1, index, row)}
-            />
-          </td>
-          <td>
-            {' '}
-            <Input
-              defaultValue={0}
-              onChange={(e) => this.handleChange(e, 2, index, row)}
-            />
-          </td>
-          <td>{row[3]}</td>
-          <td>{row[4]}</td>
+          {row.map((data, columnIndex) => {
+            if (row.length - columnIndex > 2) {
+              return (
+                <td key={columnIndex}>
+                  {' '}
+                  <Input
+                    defaultValue={0}
+                    onChange={(e) =>
+                      this.handleChange(e, columnIndex, index, row)
+                    }
+                  />
+                </td>
+              );
+            } else {
+              return <td key={columnIndex}>{data}</td>;
+            }
+          })}
         </tr>
       );
     });
-    return (
+    return rowsData[1] === undefined ? null : (
       <div>
         {' '}
         <table style={{ width: '100%' }}>
           <tbody>
             <tr>
               <td>No</td>
-              <td>A</td>
-              <td>B</td>
-              <td>C</td>
-              <td>A+B+C</td>
-              <td>A*B*C</td>
+              {rowsData[1].map((data, index) => {
+                return rowsData[1].length - index > 2 ? (
+                  <td key={index}>column{index + 1}</td>
+                ) : rowsData[1].length - index > 1 ? (
+                  <td key={index}>Addition</td>
+                ) : (
+                  <td key={index}>Multiplication</td>
+                );
+              })}
             </tr>
             {rows}
           </tbody>

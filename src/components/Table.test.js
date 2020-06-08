@@ -1,28 +1,44 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import { mount, shallow } from 'enzyme';
 import { Provider } from "react-redux";
 import configureMockStore from "redux-mock-store";
 import SimpleTables from './Table';
 import { configure } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
-import toJson from 'enzyme-to-json';
 import renderer from 'react-test-renderer'
+import toJSON from 'enzyme-to-json'
 configure({ adapter: new Adapter() });
 const mockStore = configureMockStore();
-const store = mockStore({rowsdata:[{'rows':[[0,0,0,0,0]]}]});
 
-// let wrapped = shallow(
-//     <Provider store={store}>
-//         <SimpleTables />
-//      </Provider>
-// )
 
-// console.log(wrapped)
+  
+
+
+
+
 describe("Table Component should render without any error", () => {
-let component=renderer.create( <Provider store={store}>
-    <SimpleTables />
- </Provider>)
+    let store;
+    let wrapped;
+    let props
+beforeEach(()=>{
+     props ={
+        numberOfRows:4,
+        numberOfColumns:3,
+     rowsData:[[0,0,0,0,0]],
+     
+        //  fetchAllRows: jest.fn(),
+     }
+    store = mockStore({rowsData:[[0,0,0,0,0]]});
+    store.dispatch = jest.fn();
+    wrapped =mount(
+        <Provider store={store}>
+            <SimpleTables  {...props}/>
+         </Provider>
+    )
+})
+// const myContainer=wrapped.dive()
+
     it("Table ", () => {
-        expect(component.toJson()).toMatchSnapshot();
+        expect(wrapped).toMatchSnapshot();
     });
 });
